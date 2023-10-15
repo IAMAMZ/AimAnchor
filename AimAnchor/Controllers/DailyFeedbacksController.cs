@@ -48,7 +48,7 @@ namespace AimAnchor.Controllers
         // GET: DailyFeedbacks/Create
         public IActionResult Create()
         {
-            ViewData["GoalSetId"] = new SelectList(_context.GoalSets, "Id", "Id");
+            ViewData["GoalSetId"] = new SelectList(_context.GoalSets, "Id", "Title");
             return View();
         }
 
@@ -82,7 +82,7 @@ namespace AimAnchor.Controllers
             {
                 return NotFound();
             }
-            ViewData["GoalSetId"] = new SelectList(_context.GoalSets, "Id", "Id", dailyFeedback.GoalSetId);
+            ViewData["GoalSetId"] = new SelectList(_context.GoalSets, "Id", "Title", dailyFeedback.GoalSetId);
             return View(dailyFeedback);
         }
 

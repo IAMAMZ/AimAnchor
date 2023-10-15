@@ -28,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.Improvements)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.GoalSet)
+               Goal Set
             </th>
             <th></th>
         </tr>
@@ -52,7 +52,7 @@
                 @Html.DisplayFor(modelItem => item.Improvements)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.GoalSet.Id)
+                @Html.DisplayFor(modelItem => item.GoalSet.Title)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.DailyFeedbackId">Edit</a> |
