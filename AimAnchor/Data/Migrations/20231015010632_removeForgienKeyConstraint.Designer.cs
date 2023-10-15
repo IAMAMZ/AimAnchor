@@ -4,6 +4,7 @@ using AimAnchor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AimAnchor.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231015010632_removeForgienKeyConstraint")]
+    partial class removeForgienKeyConstraint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,39 +27,39 @@ namespace AimAnchor.Data.Migrations
 
             modelBuilder.Entity("AimAnchor.Models.DailyFeedback", b =>
                 {
-                    b.Property<int>("DailyFeedbackId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DailyFeedbackId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("FeedbackDate")
+                    b.Property<string>("ChallengeOfTheday")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DayRating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalsetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HighlightOfDay")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImprovmentForTomorrow")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LessonOfTheDay")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReflectionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GoalAchievementRating")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.Property<int>("GoalSetId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Improvements")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Reflection")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("DailyFeedbackId");
-
-                    b.HasIndex("GoalSetId");
+                    b.HasIndex("GoalsetId");
 
                     b.ToTable("DailyFeedbacks");
                 });
@@ -103,10 +106,18 @@ namespace AimAnchor.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("DailyFeedbackId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Photo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
@@ -117,6 +128,8 @@ namespace AimAnchor.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DailyFeedbackId");
 
                     b.ToTable("GoalSets");
                 });
@@ -327,7 +340,7 @@ namespace AimAnchor.Data.Migrations
                 {
                     b.HasOne("AimAnchor.Models.GoalSet", "GoalSet")
                         .WithMany()
-                        .HasForeignKey("GoalSetId")
+                        .HasForeignKey("GoalsetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -343,6 +356,13 @@ namespace AimAnchor.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("GoalSet");
+                });
+
+            modelBuilder.Entity("AimAnchor.Models.GoalSet", b =>
+                {
+                    b.HasOne("AimAnchor.Models.DailyFeedback", null)
+                        .WithMany("assignedGoalSet")
+                        .HasForeignKey("DailyFeedbackId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -394,6 +414,11 @@ namespace AimAnchor.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AimAnchor.Models.DailyFeedback", b =>
+                {
+                    b.Navigation("assignedGoalSet");
                 });
 
             modelBuilder.Entity("AimAnchor.Models.GoalSet", b =>

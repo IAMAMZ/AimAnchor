@@ -4,6 +4,7 @@ using AimAnchor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,115 +12,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AimAnchor.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231015002047_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AimAnchor.Models.DailyFeedback", b =>
-                {
-                    b.Property<int>("DailyFeedbackId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DailyFeedbackId"));
-
-                    b.Property<DateTime>("FeedbackDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GoalAchievementRating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GoalSetId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Improvements")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Reflection")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("DailyFeedbackId");
-
-                    b.HasIndex("GoalSetId");
-
-                    b.ToTable("DailyFeedbacks");
-                });
-
-            modelBuilder.Entity("AimAnchor.Models.Goal", b =>
-                {
-                    b.Property<int>("GoalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GoalId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("GoalSetId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("GoalId");
-
-                    b.HasIndex("GoalSetId");
-
-                    b.ToTable("Goals");
-                });
-
-            modelBuilder.Entity("AimAnchor.Models.GoalSet", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Photo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GoalSets");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -323,28 +227,6 @@ namespace AimAnchor.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AimAnchor.Models.DailyFeedback", b =>
-                {
-                    b.HasOne("AimAnchor.Models.GoalSet", "GoalSet")
-                        .WithMany()
-                        .HasForeignKey("GoalSetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GoalSet");
-                });
-
-            modelBuilder.Entity("AimAnchor.Models.Goal", b =>
-                {
-                    b.HasOne("AimAnchor.Models.GoalSet", "GoalSet")
-                        .WithMany("Goals")
-                        .HasForeignKey("GoalSetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GoalSet");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -394,11 +276,6 @@ namespace AimAnchor.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AimAnchor.Models.GoalSet", b =>
-                {
-                    b.Navigation("Goals");
                 });
 #pragma warning restore 612, 618
         }

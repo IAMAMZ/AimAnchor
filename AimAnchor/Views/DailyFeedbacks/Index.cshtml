@@ -1,0 +1,65 @@
+﻿@model IEnumerable<AimAnchor.Models.DailyFeedback>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FeedbackDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoalAchievementRating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Note)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reflection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Improvements)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoalSet)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FeedbackDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoalAchievementRating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reflection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Improvements)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoalSet.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.DailyFeedbackId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.DailyFeedbackId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.DailyFeedbackId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
