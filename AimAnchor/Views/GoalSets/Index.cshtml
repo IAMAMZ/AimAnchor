@@ -40,7 +40,10 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Photo)
+                    @if (@item.Photo != null)
+                    {
+                        <img src="~/img/goalSet-uploads/@item.Photo" alt="goalSet Photo" class="thumb" />
+                    }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

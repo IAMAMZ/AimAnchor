@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AimAnchor.Data;
 using AimAnchor.Models;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 namespace AimAnchor.Controllers
 {
@@ -56,10 +57,16 @@ namespace AimAnchor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,StartDate,EndDate,Photo")] GoalSet goalSet)
+        public async Task<IActionResult> Create([Bind("Id,Title,StartDate,EndDate,Photo")] GoalSet goalSet,IFormFile? Photo)
         {
             if (ModelState.IsValid)
             {
+                if(Photo != null)
+                {
+                    var fileName = UploadPhoto(Photo);
+
+                    goalSet.Photo = fileName;
+                }
                 _context.Add(goalSet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,7 +95,7 @@ namespace AimAnchor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,StartDate,EndDate,Photo")] GoalSet goalSet)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,StartDate,EndDate,Photo")] GoalSet goalSet,IFormFile? Photo,String? CurrentPhoto)
         {
             if (id != goalSet.Id)
             {
@@ -97,8 +104,24 @@ namespace AimAnchor.Controllers
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
+
+                    if (Photo != null)
+                    {
+                        var fileName = UploadPhoto(Photo);
+
+                        goalSet.Photo = fileName;
+                    }
+                    else
+                    {
+                        if (CurrentPhoto != null)
+                        {
+                            goalSet.Photo = CurrentPhoto;
+
+                        }
+                    }
                     _context.Update(goalSet);
                     await _context.SaveChangesAsync();
                 }
@@ -158,6 +181,22 @@ namespace AimAnchor.Controllers
         private bool GoalSetExists(int id)
         {
           return (_context.GoalSets?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        private string UploadPhoto(IFormFile Photo)
+        {
+            // get the temp location of uplaod photo
+            var filepath = Path.GetTempPath();
+
+            // create a unique name to prevent overwritng using GUID class
+            var fileName = Guid.NewGuid() + "-" + Photo.FileName;
+
+            var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\goalSet-uploads\\" + fileName;
+
+            using (var stream = new FileStream(uploadPath,FileMode.Create))
+            {
+                Photo.CopyTo(stream);
+            }
+            return fileName;
         }
     }
 }

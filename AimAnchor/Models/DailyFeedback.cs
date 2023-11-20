@@ -11,6 +11,9 @@ namespace AimAnchor.Models
             [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             public int DailyFeedbackId { get; set; }
 
+
+            public string userId;
+
             [Required]
             [DataType(DataType.Date)]
             public DateTime FeedbackDate { get; set; }
@@ -29,10 +32,10 @@ namespace AimAnchor.Models
             [StringLength(500, ErrorMessage = "Improvements cannot be longer than 500 characters.")]
             public string Improvements { get; set; }
 
-        // Foreign Key for GoalSet
-        public int GoalSetId { get; set; }
+        // Foreign Key for Goal
+        public int GoalId { get; set; }
 
-        public GoalSet? GoalSet { get; set; }
+        public Goal? Goal { get; set; }
 
 
     }
