@@ -1,0 +1,13 @@
+﻿@model IEnumerable<GoalSet>
+@{
+   ViewData["Title"] = "Choose a GoalSet"; 
+}
+<h1>Please choose the goalset you want to submit a feedback on</h1>
+
+<ul>
+    @foreach(var goalSet in Model)
+    {
+        <li><a asp-controller="Feedback" asp-action="ByGoalset" asp-route-title="@goalSet.Title">@goalSet.Title</a></li>
+    }
+</ul>
+
