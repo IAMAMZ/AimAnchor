@@ -21,6 +21,11 @@ namespace AimAnchor.Data
         public DbSet<Goal> Goals { get; set; }
 
         public DbSet<DailyFeedback> DailyFeedbacks { get; set; }
+
+        public DbSet<Feedback> Feedbacks { get; set; }
+
+        public DbSet<FeedbackCartItem> FeedbackCartItems { get; set;}
+
     }
 
 }

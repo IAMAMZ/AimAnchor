@@ -28,6 +28,10 @@ namespace AimAnchor.Models
 
         public GoalSet? GoalSet { get; set; }
 
+        public List<FeedbackCartItem>? feedbackCartItems { get; set; }
+
+        public List<Feedback>? Feedbacks { get; set; }
+
 
 
 
