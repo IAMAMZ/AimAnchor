@@ -9,8 +9,43 @@
 }
 else
 {
+    <section class="row card-group">
     @foreach(var goal in Model)
     {
-        <p>@goal.Title</p>
+        
+              <div class="formContainer">
+                    <h2 class="goalTitle">@goal.Title</h2>
+                    <form method="post" action="addToCart" class="feedbackForm">
+                        @Html.AntiForgeryToken()
+                        <fieldset>
+                            <label class="feedbackLabel">1 to 10 how well do you think you achieved your goal today</label>
+                            <input type="number" name="feedbackRating" min="1" max="10"/>
+                        </fieldset>
+                        <fieldset>
+                            <label>
+                                    <label class="feedbackLabel">Why that rating?</label>
+                                <textarea class="longTextArea" name="reflection"></textarea>
+                            </label>
+                        </fieldset>
+                            <fieldset>
+                                <label>
+                                    <label class="feedbackLabel">What would you improve?</label>
+                                    <textarea class="longTextArea"  name="improvments"></textarea>
+                                </label>
+                            </fieldset>
+                            <fieldset>
+                                <label class="feedbackLabel">
+                                    <label>Other notes?</label>
+                                    <textarea class ="longTextArea" name="notes"></textarea>
+                                </label>
+                            </fieldset>
+                            <button class="AddReflectionBtn">
+                                Add to reflection to cart
+                            </button>
+                    </form>
+                </div>
+           
+        
     }
+    </section>
 }
