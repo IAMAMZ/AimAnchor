@@ -13,7 +13,7 @@ namespace AimAnchor.Models
         public int FeedbackCartItemId { get; set; }
 
         [Required]
-        public string userSeassionId { get; set; }
+        public string userSessionId { get; set; }
 
 
 

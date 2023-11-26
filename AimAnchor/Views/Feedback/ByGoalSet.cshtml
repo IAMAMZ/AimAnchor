@@ -12,10 +12,9 @@ else
     <section class="row card-group">
     @foreach(var goal in Model)
     {
-        
               <div class="formContainer">
                     <h2 class="goalTitle">@goal.Title</h2>
-                    <form method="post" action="addToCart" class="feedbackForm">
+                    <form method="post" action="AddToCart" class="feedbackForm">
                         @Html.AntiForgeryToken()
                         <fieldset>
                             <label class="feedbackLabel">1 to 10 how well do you think you achieved your goal today</label>
@@ -39,9 +38,11 @@ else
                                     <textarea class ="longTextArea" name="notes"></textarea>
                                 </label>
                             </fieldset>
+                            <input type="hidden" name="goalId" value="@goal.GoalId" />
                             <button class="AddReflectionBtn">
                                 Add to reflection to cart
                             </button>
+                            
                     </form>
                 </div>
            

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<AimAnchor.Models.FeedbackCartItem>
+
+@{
+    ViewData["Title"] = "Cart Items";
+}
+
+<h1>Feedback items</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GoalAchievementRating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Note)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reflection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Improvements)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Goal)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoalAchievementRating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reflection)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Improvements)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Goal.Title)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FeedbackCartItemId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FeedbackCartItemId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FeedbackCartItemId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

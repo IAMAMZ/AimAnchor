@@ -1,5 +1,8 @@
 ﻿using AimAnchor.Data;
+using AimAnchor.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AimAnchor.Controllers
 {
@@ -32,6 +35,122 @@ namespace AimAnchor.Controllers
             var goals = _context.Goals.Where(g=> g.GoalSet.Title == title).OrderBy(g => g.Title).ToList();
 
             return View(goals);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddToCart(int goalId, int feedbackRating,string reflection,string improvments,string notes)
+        {
+            // if goalId doesn't exist redirect to not found
+            var goal = _context.Goals.Find(goalId);
+
+            if (goal == null)
+            {
+                return NotFound();
+            }
+
+            // make a seassion id for the user
+            var userId = GetUserId();
+
+            //make a new feedback Cart item object
+
+            var feedbackItem = new FeedbackCartItem
+            {
+                GoalId = goalId,
+                userSessionId = userId,
+                GoalAchievementRating = feedbackRating,
+                Reflection = reflection,
+                Improvements = improvments,
+                Note = notes
+            };
+
+            _context.FeedbackCartItems.Add(feedbackItem);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Cart");
+
+        }
+
+        //GET: /cart
+
+        public async Task<IActionResult> Cart()
+        {
+            var userId = GetUserId();
+
+            return _context.FeedbackCartItems != null ?
+                           View(await _context.FeedbackCartItems.Where(c=>c.userSessionId == userId).Include(c=>c.Goal).ToListAsync()) :
+                           Problem("Entity set 'ApplicationDbContext.GoalSets'  is null.");
+        }
+
+        //GET: /Edit
+
+        public  async Task<IActionResult> Edit( int? id)
+        {
+            if (id == null || _context.GoalSets == null)
+            {
+                return NotFound();
+            }
+
+            var cartItem = await _context.FeedbackCartItems.FindAsync(id);
+            if (cartItem == null)
+            {
+                return NotFound();
+            }
+            ViewData["GoalId"] = new SelectList(_context.Goals, "GoalId", "Title", cartItem.GoalId);
+          
+            return View("EditCartItem",cartItem);
+        }
+
+        // POST: Feedback/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("FeedbackCartItemId,userSessionId,GoalAchievementRating,Note, Reflection,Improvements,GoalId")] FeedbackCartItem cartItem)
+        {
+            if (id != cartItem.FeedbackCartItemId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(cartItem);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!FeedbackCartItemExists(cartItem.FeedbackCartItemId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Cart");
+            }
+            ViewData["GoalId"] = new SelectList(_context.Goals, "GoalId", "Title", cartItem.Goal);
+            return View("EditCartItem",cartItem);
+        }
+
+
+        public string GetUserId()
+        {
+            if(HttpContext.Session.GetString("userId") == null)
+            {
+                HttpContext.Session.SetString("userId",Guid.NewGuid().ToString());
+            }
+            return HttpContext.Session.GetString("userId");
+        }
+
+        private bool FeedbackCartItemExists(int id)
+        {
+            return (_context.FeedbackCartItems?.Any(e => e.FeedbackCartItemId == id)).GetValueOrDefault();
         }
     }
 }
