@@ -138,6 +138,19 @@ namespace AimAnchor.Controllers
             return View("EditCartItem",cartItem);
         }
 
+        public async Task<IActionResult> Remove(int? id)
+        {
+
+            var cartItem = _context.FeedbackCartItems.Find(id);
+            if (!(cartItem == null))
+            {
+                _context.FeedbackCartItems.Remove(cartItem);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Cart");
+        }
+
 
         public string GetUserId()
         {
