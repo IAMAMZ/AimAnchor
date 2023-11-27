@@ -7,6 +7,9 @@ namespace AimAnchor.Models
         [Key]
         public int Id { get; set; }
 
+        [Required]
+        public string UserEmail {  get; set; }
+
         public string Title { get; set; }
 
         public DateTime StartDate { get; set; }

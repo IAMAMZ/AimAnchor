@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using AimAnchor.Data;
 using AimAnchor.Models;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AimAnchor.Controllers
 {
+    [Authorize]
     public class GoalSetsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -57,8 +59,9 @@ namespace AimAnchor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,StartDate,EndDate,Photo")] GoalSet goalSet,IFormFile? Photo)
+        public async Task<IActionResult> Create(GoalSet goalSet,IFormFile? Photo)
         {
+           
             if (ModelState.IsValid)
             {
                 if(Photo != null)
@@ -67,6 +70,7 @@ namespace AimAnchor.Controllers
 
                     goalSet.Photo = fileName;
                 }
+                
                 _context.Add(goalSet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -122,6 +126,7 @@ namespace AimAnchor.Controllers
 
                         }
                     }
+                    goalSet.UserEmail = User.Identity.Name;
                     _context.Update(goalSet);
                     await _context.SaveChangesAsync();
                 }
