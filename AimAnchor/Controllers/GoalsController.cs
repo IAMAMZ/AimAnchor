@@ -25,13 +25,14 @@ namespace AimAnchor.Controllers
         // GET: Goals
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Goals.Include(g => g.GoalSet);
+            var applicationDbContext = _context.Goals.Include(g => g.GoalSet).Where(g=>g.UserEmail==User.Identity.Name);
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Goals/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+
             if (id == null || _context.Goals == null)
             {
                 return NotFound();
@@ -40,6 +41,11 @@ namespace AimAnchor.Controllers
             var goal = await _context.Goals
                 .Include(g => g.GoalSet)
                 .FirstOrDefaultAsync(m => m.GoalId == id);
+
+            if (goal.UserEmail!= User.Identity.Name)
+            {
+                return NotFound();
+            }
             if (goal == null)
             {
                 return NotFound();
@@ -60,7 +66,7 @@ namespace AimAnchor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GoalId,Title,Description,StartDate,EndDate,GoalSetId")] Goal goal)
+        public async Task<IActionResult> Create([Bind("GoalId,UserEmail,Title,Description,StartDate,EndDate,GoalSetId")] Goal goal)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +100,7 @@ namespace AimAnchor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GoalId,Title,Description,StartDate,EndDate,GoalSetId")] Goal goal)
+        public async Task<IActionResult> Edit(int id, [Bind("GoalId,UserEmail,Title,Description,StartDate,EndDate,GoalSetId")] Goal goal)
         {
             if (id != goal.GoalId)
             {

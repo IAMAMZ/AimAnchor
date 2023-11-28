@@ -26,7 +26,7 @@ namespace AimAnchor.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.GoalSets != null ? 
-                          View(await _context.GoalSets.ToListAsync()) :
+                          View(await _context.GoalSets.Where(g=>g.UserEmail==User.Identity.Name).ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.GoalSets'  is null.");
         }
 
@@ -40,7 +40,8 @@ namespace AimAnchor.Controllers
 
             var goalSet = await _context.GoalSets
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (goalSet == null)
+
+            if (goalSet == null || goalSet.UserEmail != User.Identity.Name)
             {
                 return NotFound();
             }
@@ -87,7 +88,7 @@ namespace AimAnchor.Controllers
             }
 
             var goalSet = await _context.GoalSets.FindAsync(id);
-            if (goalSet == null)
+            if (goalSet == null || goalSet.UserEmail != User.Identity.Name)
             {
                 return NotFound();
             }
@@ -99,7 +100,7 @@ namespace AimAnchor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,StartDate,EndDate,Photo")] GoalSet goalSet,IFormFile? Photo,String? CurrentPhoto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserEmail, Title,StartDate,EndDate,Photo")] GoalSet goalSet,IFormFile? Photo,String? CurrentPhoto)
         {
             if (id != goalSet.Id)
             {
