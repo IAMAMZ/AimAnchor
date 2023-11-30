@@ -1,11 +1,13 @@
 ﻿using AimAnchor.Data;
 using AimAnchor.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace AimAnchor.Controllers
 {
+    [Authorize]
     public class FeedbackController : Controller
     {
 
@@ -19,7 +21,7 @@ namespace AimAnchor.Controllers
         public IActionResult Index()
         {
             // fetch the goalsets and display them in index
-            var goalSets = _context.GoalSets.OrderBy(c => c.Title).ToList();
+            var goalSets = _context.GoalSets.OrderBy(c => c.Title).Where(c=>c.UserEmail==User.Identity.Name).ToList();
             return View(goalSets);
         }
 
@@ -149,6 +151,61 @@ namespace AimAnchor.Controllers
             }
 
             return RedirectToAction("Cart");
+        }
+
+
+        public IActionResult saveReflections(DateTime date)
+        {
+            // get all the items associated with the logged in user
+
+            var cartItems = _context.FeedbackCartItems.Where(i => i.userSessionId == HttpContext.Session.GetString("userId"));
+
+            List<Feedback> myFeedbacks = new List<Feedback>();
+            // change the feedback cart item to feedbacks
+
+            foreach(var cartItem in cartItems)
+            {
+                Feedback feedback = new Feedback { 
+                    GoalAchievementRating = cartItem.GoalAchievementRating,
+                    Note=cartItem.Note,
+                    Reflection=cartItem.Reflection,
+                    Improvements=cartItem.Improvements,
+                    GoalId=cartItem.GoalId,
+                };
+                myFeedbacks.Add(feedback);
+                _context.Feedbacks.Add(feedback);
+
+
+            }
+
+           
+
+
+            // create a daily feedback
+            DailyFeedback myDailyFeedback = new DailyFeedback { userEmail=User.Identity.Name,FeedbackDate=date,Feedbacks=myFeedbacks};
+
+            _context.DailyFeedbacks.Add(myDailyFeedback);
+            _context.SaveChanges();
+
+
+            foreach (var feedback in myFeedbacks)
+            {
+                Feedback savefeedback = new Feedback
+                {  dailyFeedback = myDailyFeedback,
+                    GoalAchievementRating = feedback.GoalAchievementRating,
+                    Note = feedback.Note,
+                    Reflection = feedback.Reflection,
+                    Improvements = feedback.Improvements,
+                    GoalId = feedback.GoalId,
+                };
+                _context.Feedbacks.Add(savefeedback);
+
+            }
+            _context.SaveChanges();
+         
+
+            return View("dailyReflections");
+
         }
 
 
