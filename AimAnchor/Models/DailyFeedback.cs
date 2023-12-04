@@ -12,7 +12,10 @@ namespace AimAnchor.Models
             public int DailyFeedbackId { get; set; }
 
 
-            public string userEmail;
+            public string userEmail { get; set; }
+
+
+
 
             [Required]
             [DataType(DataType.Date)]

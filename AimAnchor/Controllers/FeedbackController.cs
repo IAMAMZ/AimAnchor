@@ -154,7 +154,7 @@ namespace AimAnchor.Controllers
         }
 
 
-        public IActionResult saveReflections(DateTime date)
+        public IActionResult SaveReflections(DateTime date)
         {
             // get all the items associated with the logged in user
 
@@ -188,7 +188,7 @@ namespace AimAnchor.Controllers
             _context.SaveChanges();
 
 
-            foreach (var feedback in myFeedbacks)
+          /*  foreach (var feedback in myFeedbacks)
             {
                 Feedback savefeedback = new Feedback
                 {  dailyFeedback = myDailyFeedback,
@@ -202,9 +202,9 @@ namespace AimAnchor.Controllers
 
             }
             _context.SaveChanges();
-         
+         */
 
-            return View("dailyReflections");
+            return View("SavedDailyReflections",_context.DailyFeedbacks.Where(f=>f.userEmail==User.Identity.Name).ToList());
 
         }
 
