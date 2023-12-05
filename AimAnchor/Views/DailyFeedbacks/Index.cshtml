@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<AimAnchor.Models.DailyFeedback>
 
 @{
-    ViewData["Title"] = "savedDailyReflections";
+    ViewData["Title"] = "Index";
 }
 
-<h1>savedDailyReflections</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.userEmail)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.FeedbackDate)
             </th>
@@ -21,6 +24,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.userEmail)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FeedbackDate)
             </td>

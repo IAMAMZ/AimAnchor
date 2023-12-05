@@ -1,0 +1,44 @@
+﻿@model AimAnchor.Models.DailyFeedback
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>DailyFeedback</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.userEmail)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.userEmail)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FeedbackDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FeedbackDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (Model.Feedbacks != null) {
+        foreach (var feedback in Model.Feedbacks) {
+
+            <ul>
+                <li>@feedback.Goal.Title</li>
+                <li>@feedback.Reflection</li>
+                <li>@feedback.Improvements</li>
+                <li>@feedback.GoalAchievementRating</li>
+            </ul>
+        }
+
+        }
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.DailyFeedbackId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

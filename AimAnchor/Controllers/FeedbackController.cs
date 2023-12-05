@@ -188,23 +188,23 @@ namespace AimAnchor.Controllers
             _context.SaveChanges();
 
 
-          /*  foreach (var feedback in myFeedbacks)
-            {
-                Feedback savefeedback = new Feedback
-                {  dailyFeedback = myDailyFeedback,
-                    GoalAchievementRating = feedback.GoalAchievementRating,
-                    Note = feedback.Note,
-                    Reflection = feedback.Reflection,
-                    Improvements = feedback.Improvements,
-                    GoalId = feedback.GoalId,
-                };
-                _context.Feedbacks.Add(savefeedback);
+            /*  foreach (var feedback in myFeedbacks)
+              {
+                  Feedback savefeedback = new Feedback
+                  {  dailyFeedback = myDailyFeedback,
+                      GoalAchievementRating = feedback.GoalAchievementRating,
+                      Note = feedback.Note,
+                      Reflection = feedback.Reflection,
+                      Improvements = feedback.Improvements,
+                      GoalId = feedback.GoalId,
+                  };
+                  _context.Feedbacks.Add(savefeedback);
 
-            }
-            _context.SaveChanges();
-         */
+              }
+              _context.SaveChanges();
+           */
 
-            return View("SavedDailyReflections",_context.DailyFeedbacks.Where(f=>f.userEmail==User.Identity.Name).ToList());
+            return RedirectToAction("Index", "DailyFeedbacks");
 
         }
 
