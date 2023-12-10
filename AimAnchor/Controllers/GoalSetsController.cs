@@ -26,7 +26,7 @@ namespace AimAnchor.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.GoalSets != null ? 
-                          View(await _context.GoalSets.Where(g=>g.UserEmail==User.Identity.Name).ToListAsync()) :
+                          View("Index",await _context.GoalSets.Where(g=>g.UserEmail==User.Identity.Name).ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.GoalSets'  is null.");
         }
 
@@ -84,15 +84,15 @@ namespace AimAnchor.Controllers
         {
             if (id == null || _context.GoalSets == null)
             {
-                return NotFound();
+                return View("Error"); // NotFound();
             }
 
             var goalSet = await _context.GoalSets.FindAsync(id);
             if (goalSet == null || goalSet.UserEmail != User.Identity.Name)
             {
-                return NotFound();
+                return View("Error"); // NotFound();
             }
-            return View(goalSet);
+            return View("Edit",goalSet);
         }
 
         // POST: GoalSets/Edit/5
