@@ -107,6 +107,11 @@ namespace AimAnchor.Controllers
                 return NotFound();
             }
 
+            if (goalSet.UserEmail!= User.Identity.Name)
+            {
+                return View("Error");
+            }
+
             if (ModelState.IsValid)
             {
 
@@ -155,14 +160,14 @@ namespace AimAnchor.Controllers
                 return NotFound();
             }
 
-            var goalSet = await _context.GoalSets
+            var goalSet = await _context.GoalSets.Where(m=>m.UserEmail==User.Identity.Name)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (goalSet == null)
             {
                 return NotFound();
             }
 
-            return View(goalSet);
+            return View("Delete",goalSet);
         }
 
         // POST: GoalSets/Delete/5
@@ -175,7 +180,7 @@ namespace AimAnchor.Controllers
                 return Problem("Entity set 'ApplicationDbContext.GoalSets'  is null.");
             }
             var goalSet = await _context.GoalSets.FindAsync(id);
-            if (goalSet != null)
+            if (goalSet != null && goalSet.UserEmail == User.Identity.Name)
             {
                 _context.GoalSets.Remove(goalSet);
             }

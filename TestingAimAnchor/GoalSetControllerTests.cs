@@ -111,11 +111,11 @@ namespace TestingAimAnchor
         [TestMethod]
         public void Edit_POST_RedirectsToIndex()
         {
-            GoalSet goalset = _context.GoalSets.Find(2);
+            GoalSet goalset = _context.GoalSets.Find(1);
 
             goalset.Title = "Edited Title";
 
-            var result = controller.Edit(2,goalset,null,null).Result;
+            var result = controller.Edit(1,goalset,null,null).Result;
 
             Assert.IsInstanceOfType(result, typeof(RedirectToActionResult));
 
@@ -128,16 +128,50 @@ namespace TestingAimAnchor
 
         public void Edit_POST_EditsData()
         {
-            GoalSet goalSet = _context.GoalSets.Find(3);
+            GoalSet goalSet = _context.GoalSets.Find(1);
             goalSet.Title = "Title edited";
             goalSet.EndDate = DateTime.Now;
 
             controller.Edit(3, goalSet, null,null) ;
 
-            Assert.AreEqual(_context.GoalSets.Find(3).Title, "Title edited");
-           
+            Assert.AreEqual(_context.GoalSets.Find(1).Title, "Title edited");
+
         }
         #endregion
+
+        #region "Delete"
+        [TestMethod]
+        public void Delete_GET_returnsView()
+        {
+            var result = (ViewResult)controller.Delete(1).Result;
+
+            Assert.AreEqual("Delete", result.ViewName);
+        }
+
+        [TestMethod]
+        public void DeleteConfirmedRemovesGoalset()
+        {
+            controller.DeleteConfirmed(1);
+            
+            Assert.IsNull(_context.GoalSets.Find(1));
+
+        }
+
+        [TestMethod]
+        public void DeleteConfirmedRedirectsToIndex()
+        {
+            // to be implement
+           
+        }
+
+        [TestMethod]
+        public void DeleteConfirmedInvalidIdReturnsProblem()
+        {
+            // to be implemented
+        }
+        
+        #endregion
+
 
 
     }
